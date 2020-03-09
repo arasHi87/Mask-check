@@ -1,0 +1,4 @@
+config.py
+test.py
+__pycache__
+data/target.txt
