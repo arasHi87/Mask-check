@@ -1,0 +1,5 @@
+Flask==1.1.1
+line-bot-sdk==1.14.0
+numpy==1.18.1
+requests==2.22.0
+six==1.12.0
