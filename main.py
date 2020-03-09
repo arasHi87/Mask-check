@@ -1,5 +1,8 @@
+import collections
+
 from utils import *
 from config import *
+from fuzzywuzzy import fuzz
 
 from flask import Flask, request, abort
 
@@ -92,6 +95,22 @@ def handle_message(event):
                     ) for data in carousel_data
                 ]
             )
+        ))
+    else:
+        name = event.message.text
+        score = []
+        cnt = 0
+
+        for data in DataAll:
+            score.append((fuzz.partial_token_set_ratio(data[1], name), cnt))
+            cnt += 1
+        
+        score.sort(reverse = True)
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(
+            text = '{}\n成人剩餘{}個、小孩剩餘{}個'.format(
+                DataAll[score[0][1]][1],
+                MaskData[DataAll[score[0][1]][0]][1],
+                MaskData[DataAll[score[0][1]][0]][2])
         ))
 
 @handler.add(PostbackEvent)
