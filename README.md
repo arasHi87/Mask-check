@@ -37,3 +37,7 @@ python app.py
 * [Mask data](https://data.gov.tw/dataset/116285)
 
 * [Points data](https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json)
+
+## Error
+
+* Mask data and points data doesnt match
