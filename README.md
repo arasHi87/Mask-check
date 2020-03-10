@@ -24,8 +24,16 @@ python app.py
 
 * postback and get the map of data
 
-## Future
-
 * dynamic renew data
 
 * send the name and get data
+
+## Future
+
+* Generate geography picture
+
+## Source
+
+* [Mask data](https://data.gov.tw/dataset/116285)
+
+* [Points data](https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json)
