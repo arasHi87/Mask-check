@@ -53,6 +53,13 @@ def callback():
 
 @handler.add(MessageEvent)
 def handle_message(event):
+    
+    global MaskData
+    interval = CalcTime(MaskData['0145080011'][3])
+    if interval[0] > 1 or interval[1] > 300:
+        DownloadMask()
+        MaskData = LoadMask()
+
     if event.message.type == 'location':
         lat = event.message.latitude
         lon = event.message.longitude
