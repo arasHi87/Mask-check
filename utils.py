@@ -4,6 +4,7 @@ import requests
 import numpy as np
 # import urllib.request as urllib2
 
+from datetime import datetime
 from math import radians, cos, sin, asin, sqrt
 
 def GetDistance(A, B):
@@ -40,7 +41,7 @@ def LoadMask():
     odata = csv.reader(open('data/mask.csv', 'r'))
     
     for dt in odata:
-        data[dt[0]] = [dt[1], dt[4], dt[5]]
+        data[dt[0]] = [dt[1], dt[4], dt[5], dt[6]]
     
     return data
 
@@ -49,3 +50,8 @@ def LoadDis():
     data = [x for x in csv.reader(open('data/points.csv', 'r'))]
     [DisAll.append([float(x[7]), float(x[6])]) for x in data]
     return DisAll
+
+def CalcTime(old):
+    now = datetime.now().strftime('%Y %m %d %H %M %S')
+    interval = datetime.strptime(now, '%Y %m %d %H %M %S') - datetime.strptime(old, '%Y/%m/%d %H:%M:%S')
+    return (interval.days, interval.seconds)
