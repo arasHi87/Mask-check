@@ -28,9 +28,7 @@ app = Flask(__name__)
 
 line_bot_api = LineBotApi(CNANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(CNANNEL_SECRET)
-MaskData = LoadMask()
-DataAll = [x for x in csv.reader(open('data/points.csv'))]
-# DisAll = LoadDis()
+DataAll = LoadData()
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -53,37 +51,37 @@ def callback():
 
 @handler.add(MessageEvent)
 def handle_message(event):
-    
-    global MaskData
-    interval = CalcTime(MaskData['0145080011'][3])
+    global DataAll
+    interval = CalcTime(DataAll[0][6])
     if interval[0] > 1 or interval[1] > 300:
+        # line_bot_api.reply_message(event.reply_token, TextSendMessage('更新資料中，請稍後數秒'))
         DownloadMask()
-        MaskData = LoadMask()
-
+        DataAll = LoadData()
+    
     if event.message.type == 'location':
         lat = event.message.latitude
         lon = event.message.longitude
-        TenData = GetDistance(np.matrix([[float(x[7]), float(x[6])] for x in DataAll]),
-                              np.matrix([[lat, lon]])).argsort(axis=0)[:10]
+        ret = GetDistance(np.matrix([[float(x[7]), float(x[8])] for x in DataAll]),
+                          np.matrix([[lat, lon]])).argsort(axis=0)[:10]
         alt_text = ""
         carousel_data = []
 
-        for idx in TenData:
-            data = MaskData[DataAll[int(idx)][0]]
+        for idx in ret:
+            data = DataAll[int(idx)]
             alt_text += "{}:\n  成人剩餘{}個、孩童剩餘{}個\n".format(
-                data[0], data[1], data[2]
+                data[1], data[4], data[5]
             )
             carousel_data.append([
-                data[0],
-                "aldut last {}\nchild last {}".format(data[1], data[2]), 
-                'get map', 
-                str(data[0]),
-                "address:{},{},{},{}".format(DataAll[int(idx)][7],
-                                  DataAll[int(idx)][6],
-                                  data[0],
-                                  DataAll[int(idx)][2])
+                data[1],
+                "aldut last {}\nchild last {}".format(data[4], data[5]),
+                'get map',
+                str(data[1]),
+                "address:{},{},{},{}".format(data[7],
+                                  data[8],
+                                  data[1],
+                                  data[2]) 
             ])
-
+        
         line_bot_api.reply_message(event.reply_token, TemplateSendMessage(
             alt_text = alt_text,
             template = CarouselTemplate(
@@ -113,12 +111,13 @@ def handle_message(event):
             cnt += 1
         
         score.sort(reverse = True)
+        idx = score[0][1]
         line_bot_api.reply_message(event.reply_token, TextSendMessage(
             text = '{}\n成人剩餘{}個、小孩剩餘{}個'.format(
-                DataAll[score[0][1]][1],
-                MaskData[DataAll[score[0][1]][0]][1],
-                MaskData[DataAll[score[0][1]][0]][2])
-        ))
+                DataAll[idx][1],
+                DataAll[idx][4],
+                DataAll[idx][5]
+        )))
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
