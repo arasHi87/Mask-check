@@ -36,20 +36,19 @@ def DownloadMask():
     with open('data/mask.csv', 'w') as fp:
         fp.write(FileData)
 
-def LoadMask():
-    data = {}
-    odata = csv.reader(open('data/mask.csv', 'r'))
-    
-    for dt in odata:
-        data[dt[0]] = [dt[1], dt[4], dt[5], dt[6]]
-    
-    return data
+def LoadData():
+    dist_data = {}
+    ret_data = []
+    nuse_data = []
 
-def LoadDis():
-    DisAll = []
-    data = [x for x in csv.reader(open('data/points.csv', 'r'))]
-    [DisAll.append([float(x[7]), float(x[6])]) for x in data]
-    return DisAll
+    for x in csv.reader(open('data/points.csv', 'r')):
+        dist_data[x[0]] = [x[7], x[6]]
+
+    for data in csv.reader(open('data/mask.csv', 'r')):
+        if data[0] in dist_data:
+            data.extend(dist_data[data[0]]), ret_data.append(data)
+    
+    return ret_data
 
 def CalcTime(old):
     now = datetime.now().strftime('%Y %m %d %H %M %S')
