@@ -40,4 +40,4 @@ python app.py
 
 ## Error
 
-* Mask data and points data doesnt match
+* ~~Mask data and points data doesnt match~~
