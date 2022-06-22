@@ -1,6 +1,6 @@
 Flask==1.1.1
 line-bot-sdk==1.14.0
-numpy==1.18.1
+numpy==1.22.0
 requests==2.22.0
 six==1.12.0
 collections-extended==1.0.3
